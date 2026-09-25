@@ -1,7 +1,7 @@
 export type UserProfile = 'PRESTADOR' | 'COLABORADOR' | 'ADMIN';
 export type EventStatus = 'BORRADOR' | 'DISPONIBLE' | 'FINALIZADO' | 'CANCELADO';
-export type Cargo = 'Jurídico' | 'Financiero' | 'Comercial' | 'Técnico' | 'Gestión Humana';
-export const CARGOS: Cargo[] = ['Jurídico','Financiero','Comercial','Técnico','Gestión Humana'];
+export type Cargo = 'Jurídico' | 'Financiero' | 'Comercial' | 'Técnico' | 'Gestión Humana' | 'Representante legal';
+export const CARGOS: Cargo[] = ['Jurídico','Financiero','Comercial','Técnico','Gestión Humana','Representante legal'];
 export interface EventItem { id:number; name:string; description:string; start:string; end:string; status:EventStatus; responsible:string; slots:string[]; }
 export interface Person { role:Cargo; firstName:string; lastName:string; phone:string; email:string; }
 export interface Registration { provider:string; people:Person[]; slot:string; status:string; }
