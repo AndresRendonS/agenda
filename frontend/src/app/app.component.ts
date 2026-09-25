@@ -4,13 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { EventCardComponent } from './shared/components/event-card.component';
 import { AttendeeFormComponent } from './shared/components/attendee-form.component';
-interface EventItem {id:number;name:string;description:string;start:string;end:string;status:string;responsible:string;slots:string[];}
-interface Person {role:string;firstName:string;lastName:string;phone:string;email:string;}
-interface Commitment {id:number;role:string;text:string;done:boolean;}
+import { EventItem, Person, Commitment, Cargo, CARGOS } from './core/models/event.models';
 @Component({selector:'app-root',standalone:true,imports:[CommonModule,FormsModule,EventCardComponent,AttendeeFormComponent],templateUrl:'./app.component.html'})
 export class AppComponent implements OnInit {
  api='http://localhost:8080/api'; profile='PRESTADOR'; provider='IPS-110010001'; view='events'; events:EventItem[]=[]; selected?:EventItem;
- roles=['Jurídico','Financiero','Comercial','Técnico','Gestión Humana']; people:Person[]=[]; slot=''; notice=''; registrations:any[]=[]; commitments:Commitment[]=[]; commitmentRole='Jurídico'; commitmentText=''; actaName=''; assignedProvider='IPS-110010001';
+ roles:Cargo[]=CARGOS; people:Person[]=[]; slot=''; notice=''; registrations:any[]=[]; commitments:Commitment[]=[]; commitmentRole:Cargo='Jurídico'; commitmentText=''; actaName=''; assignedProvider='IPS-110010001';
  draft={name:'',description:'',start:'',end:'',responsible:'',slotMinutes:30,slotsText:''};
  providers:any[]=[]; assignments:string[]=[]; attendance:Record<string,boolean>={}; workflowActa:any={}; eventStatus='DISPONIBLE'; collaborator='colaborador.demo@nuevaeps.com'; newAssignment=''; notificationLog:any[]=[];
  constructor(private http:HttpClient){}
