@@ -27,3 +27,9 @@ Dos proyectos independientes: `frontend/` (Angular 18 standalone) y `backend/` (
 - Registrar asistencia real y vista de seguimiento completa; roles y pruebas automatizadas.
 
 **Seguridad:** los endpoints son públicos exclusivamente para desarrollo local. No publicar este mock en Internet ni usar datos personales reales.
+
+## Ampliación de flujos mock (septiembre 2026)
+
+- Se añadieron las vistas de asignación de prestadores, control de asistencia, estado del evento, consulta y simulación de firma del acta, y bitácora mock de notificaciones.
+- API adicional bajo `/api/workflow` con prestadores IPS y operador farmacéutico de demostración, asignaciones, asistencia, actas y estados. Los datos se reinician al reiniciar el servidor.
+- **Importante:** estas funciones siguen siendo prototipo: no existe autenticación, verificación real de permisos, persistencia, firma válida ni correo programado. Las nuevas pantallas amplían el mock anterior; aún se requieren componentes Angular separados, pruebas de integración, Gradle Wrapper y validaciones de negocio adicionales antes de considerar la historia completa.
