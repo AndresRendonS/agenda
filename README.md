@@ -1,10 +1,10 @@
 # Gestión de Eventos Nueva EPS — prototipo MOCK
 
-Dos proyectos independientes: `frontend/` (Angular 18 standalone) y `backend/` (Java 17 / Spring Boot 3.3). **No es una integración productiva con Portal**; los perfiles, el prestador, las notificaciones y las firmas son simulados. Los datos se almacenan en memoria y se reinician al reiniciar el backend.
+Dos proyectos independientes: `frontend/` (Angular 18 standalone) y `backend/` (Java 21 / Spring Boot 3.3). **No es una integración productiva con Portal**; los perfiles, el prestador, las notificaciones y las firmas son simulados. Los datos se almacenan en memoria y se reinician al reiniciar el backend.
 
 ## Ejecutar
 
-1. Java 17 y Maven 3.9+: `cd backend && mvn spring-boot:run` (puerto 8080).
+1. Java 21 y Gradle 8.5 o superior: `cd backend && gradle bootRun` (puerto 8080).
 2. Node 20 LTS y npm: `cd frontend && npm install && npm start` (http://localhost:4200).
 3. Cambia el perfil en la esquina superior derecha para probar Prestador, Colaborador o Administrador.
 4. Para inspeccionar la API: `GET http://localhost:8080/api/events`.
