@@ -7,12 +7,19 @@ import { AttendeeFormComponent } from './shared/components/attendee-form.compone
 import { EventItem, Person, Commitment, Cargo, CARGOS } from './core/models/event.models';
 @Component({selector:'app-root',standalone:true,imports:[CommonModule,FormsModule,EventCardComponent,AttendeeFormComponent],templateUrl:'./app.component.html'})
 export class AppComponent implements OnInit {
- api='http://localhost:8080/api'; profile='PRESTADOR'; provider='IPS-110010001'; view='events'; events:EventItem[]=[]; selected?:EventItem;
+ api='http://localhost:8080/api'; profile='PRESTADOR'; provider='IPS-110010001'; view='events'; agendaDate=''; agendaFilter=''; agendaMonth=new Date(2026,9,1); events:EventItem[]=[]; selected?:EventItem;
  roles:Cargo[]=CARGOS; people:Person[]=[]; slot=''; notice=''; registrations:any[]=[]; commitments:Commitment[]=[]; commitmentRole:Cargo='Jurídico'; commitmentText=''; actaName=''; assignedProvider='IPS-110010001';
  draft={name:'',description:'',start:'',end:'',responsible:'',slotMinutes:30,slotsText:''};
  providers:any[]=[]; assignments:string[]=[]; attendance:Record<string,boolean>={}; workflowActa:any={}; eventStatus='DISPONIBLE'; collaborator='colaborador.demo@nuevaeps.com'; newAssignment=''; notificationLog:any[]=[];
  constructor(private http:HttpClient){}
  ngOnInit(){this.load();this.loadProviders();}
+ get agendaMonthLabel(){return this.agendaMonth.toLocaleDateString('es-CO',{month:'long',year:'numeric'});}
+ get agendaDays(){const y=this.agendaMonth.getFullYear(),m=this.agendaMonth.getMonth();const first=(new Date(y,m,1).getDay()+6)%7;return [...Array(first).fill(null),...Array.from({length:new Date(y,m+1,0).getDate()},(_,i)=>i+1)];}
+ get agendaEvents(){return this.events.filter(e=>!this.agendaFilter||e.status===this.agendaFilter).filter(e=>!this.agendaDate||e.slots.some(s=>s.slice(0,10)===this.agendaDate)||e.start.slice(0,10)===this.agendaDate);}
+ agendaDay(day:number|null){if(!day)return;const date=this.agendaMonth.getFullYear()+'-'+String(this.agendaMonth.getMonth()+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');this.agendaDate=this.agendaDate===date?'':date;}
+ agendaCount(day:number|null){if(!day)return 0;const date=this.agendaMonth.getFullYear()+'-'+String(this.agendaMonth.getMonth()+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');return this.events.filter(e=>e.slots.some(s=>s.startsWith(date))||e.start.startsWith(date)).length;}
+ moveAgenda(months:number){this.agendaMonth=new Date(this.agendaMonth.getFullYear(),this.agendaMonth.getMonth()+months,1);this.agendaDate='';}
+ generateSlots(){if(!this.draft.start||!this.draft.end||this.draft.slotMinutes<30||this.draft.slotMinutes%30!==0){this.notice='Define fechas válidas y franjas de al menos 30 minutos';return;}const start=new Date(this.draft.start),end=new Date(this.draft.end);if(!(end>start)){this.notice='La fecha final debe ser posterior al inicio';return;}const slots:string[]=[];for(let t=start.getTime();t+this.draft.slotMinutes*60000<=end.getTime()&&slots.length<300;t+=this.draft.slotMinutes*60000){const d=new Date(t);const local=new Date(t-d.getTimezoneOffset()*60000).toISOString().slice(0,19);slots.push(local);}this.draft.slotsText=slots.join('\n');this.notice=slots.length+' franjas generadas; revisa las fechas antes de guardar.';}
  load(){this.http.get<EventItem[]>(this.api+'/events').subscribe({next:x=>this.events=x,error:()=>this.notice='No se pudo conectar con el backend. Inicia Spring Boot en el puerto 8080.'});}
  select(e:EventItem){this.selected=e;this.view='detail';this.slot=e.slots[0]||'';this.refreshDetails();this.loadWorkflow();}
  refreshDetails(){if(!this.selected)return;this.http.get<any[]>(this.api+'/events/'+this.selected.id+'/registrations?provider='+encodeURIComponent(this.provider)).subscribe(x=>this.registrations=x);this.http.get<Commitment[]>(this.api+'/events/'+this.selected.id+'/commitments?provider='+encodeURIComponent(this.provider)).subscribe(x=>this.commitments=x);}
@@ -31,7 +38,7 @@ export class AppComponent implements OnInit {
  signActa(){if(!this.selected)return;this.http.post(this.api+'/workflow/events/'+this.selected.id+'/actas/sign',{provider:this.provider}).subscribe({next:()=>{this.notice='Firma simulada registrada';this.loadWorkflow();},error:()=>this.notice='No existe un acta para firmar'});}
  registerWorkflowActa(){if(!this.selected||!this.actaName)return;this.http.post(this.api+'/workflow/events/'+this.selected.id+'/actas',{provider:this.provider,filename:this.actaName}).subscribe(()=>this.loadWorkflow());}
  updateStatus(status:string){if(!this.selected)return;this.http.put(this.api+'/workflow/events/'+this.selected.id+'/status',{status}).subscribe(()=>this.loadWorkflow());}
- loadNotifications(){this.http.get<any[]>(this.api+'/workflow/notifications').subscribe(x=>this.notificationLog=x);}
+ loadNotifications(){this.http.get<any[]>(this.api+'/mock/outbox').subscribe(x=>this.notificationLog=x);}
  setProfile(p:string){this.profile=p;this.view='events';this.selected=undefined;this.notice='Perfil de demostración: '+p;}
  get canManage(){return this.profile==='COLABORADOR'||this.profile==='ADMIN';}
  get isAdmin(){return this.profile==='ADMIN';}
