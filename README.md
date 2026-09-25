@@ -33,3 +33,19 @@ Dos proyectos independientes: `frontend/` (Angular 18 standalone) y `backend/` (
 - Se añadieron las vistas de asignación de prestadores, control de asistencia, estado del evento, consulta y simulación de firma del acta, y bitácora mock de notificaciones.
 - API adicional bajo `/api/workflow` con prestadores IPS y operador farmacéutico de demostración, asignaciones, asistencia, actas y estados. Los datos se reinician al reiniciar el servidor.
 - **Importante:** estas funciones siguen siendo prototipo: no existe autenticación, verificación real de permisos, persistencia, firma válida ni correo programado. Las nuevas pantallas amplían el mock anterior; aún se requieren componentes Angular separados, pruebas de integración, Gradle Wrapper y validaciones de negocio adicionales antes de considerar la historia completa.
+
+## Rama de ampliación funcional
+
+Rama: `feature/gestion-eventos-mock-completo`. Ejecuta `git checkout feature/gestion-eventos-mock-completo` tras clonar, o descarga el ZIP de esa rama desde GitHub.
+
+### Pantallas y flujos
+- Prestador: catálogo, detalle, inscripción con componente reutilizable validado, agenda, confirmación, consulta de inscripciones, compromisos y actas, firma simulada.
+- Colaborador: prestadores asignados, asistencia, compromisos y carga de acta (solo simulación).
+- Administrador: creación de eventos, franjas, responsables, estado, asignación de prestadores y consulta de notificaciones mock.
+- Backend: restricciones básicas de inscripción duplicada, fechas, franjas, límite de compromisos, finalización y validación elemental de PDF; outbox de correos simulados y tarea diaria de recordatorios.
+
+### Ejecutar
+Backend: Java 21, Gradle 8.5+: `cd backend && gradle bootRun`. Frontend: Node 20: `cd frontend && npm install && npm start`. Pruebas: `cd backend && gradle test`, `cd frontend && npm run build`. CI definida en `.github/workflows/mock-ci.yml`.
+
+### Limitaciones importantes
+Esta rama es una **demo mock ampliada**, no una implementación completa de producción. La selección de perfil no autentica; las asignaciones no protegen los endpoints; los datos están en memoria; los correos van a un outbox, no se envían; la firma no es jurídica; los PDFs se guardan temporalmente y no existe un repositorio documental. Aún faltan integración SSO/Portal, seguridad backend, persistencia, colas/reintentos de correo, gestión transaccional de cupos, trazabilidad, pruebas end-to-end y Gradle Wrapper. No uses información personal real ni despliegues los endpoints mock públicamente.
