@@ -7,7 +7,7 @@ import { AttendeeFormComponent } from './shared/components/attendee-form.compone
 import { EventItem, Person, Commitment, Cargo, CARGOS } from './core/models/event.models';
 @Component({selector:'app-root',standalone:true,imports:[CommonModule,FormsModule,EventCardComponent,AttendeeFormComponent],templateUrl:'./app.component.html'})
 export class AppComponent implements OnInit {
- api='http://localhost:8080/api'; profile='PRESTADOR'; provider='IPS-110010001'; view='events'; agendaDate=''; agendaFilter=''; agendaMonth=new Date(2026,9,1); events:EventItem[]=[]; selected?:EventItem;
+ api='http://localhost:8080/api'; profile='PRESTADOR'; provider='IPS-110010001'; view='events'; agendaDate=''; agendaFilter=''; agendaMonth=new Date(2026,9,1); events:EventItem[]=[]; selected?:EventItem; myRegistrations:{event:EventItem;registration:any}[]=[]; confirmedRegistration:any=null; submitting=false;
  roles:Cargo[]=CARGOS; people:Person[]=[]; slot=''; notice=''; registrations:any[]=[]; commitments:Commitment[]=[]; commitmentRole:Cargo='Jurídico'; commitmentText=''; actaName=''; assignedProvider='IPS-110010001';
  draft={name:'',description:'',start:'',end:'',responsible:'',slotMinutes:30,slotsText:''};
  providers:any[]=[]; assignments:string[]=[]; attendance:Record<string,boolean>={}; workflowActa:any={}; eventStatus='DISPONIBLE'; collaborator='colaborador.demo@nuevaeps.com'; newAssignment=''; notificationLog:any[]=[];
