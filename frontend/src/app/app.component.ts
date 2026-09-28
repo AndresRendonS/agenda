@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { EventCardComponent } from './shared/components/event-card.component';
 import { AttendeeFormComponent } from './shared/components/attendee-form.component';
 import { EventItem, Person, Commitment, Cargo, CARGOS } from './core/models/event.models';
+import { AgendaSecurityService } from './core/security/agenda-security.service';
+import { AGENDA_PERMISSIONS as P } from './core/security/agenda-permissions';
 @Component({selector:'app-root',standalone:true,imports:[CommonModule,FormsModule,EventCardComponent,AttendeeFormComponent],templateUrl:'./app.component.html'})
 export class AppComponent implements OnInit {
  api='http://localhost:8080/api'; profile='PRESTADOR'; provider='IPS-110010001'; view='events'; agendaDate=''; agendaFilter=''; agendaMonth=new Date(2026,9,1); events:EventItem[]=[]; selected?:EventItem; myRegistrations:{event:EventItem;registration:any}[]=[]; confirmedRegistration:any=null; submitting=false;
